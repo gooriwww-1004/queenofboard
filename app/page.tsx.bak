@@ -36,7 +36,7 @@ export default function LandingPage() {
           {staff.map((member) => (
             <div key={member.name} className="p-6 bg-white dark:bg-[#1A1A2E] rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 hover:border-[#6C63FF] transition group">
               <div className="mb-4 flex justify-center">
-                <AiAvatar name={member.name as any} size={48} />
+                <AiAvatar name={member.name as any} size="lg" />
               </div>
               <h3 className="text-xl font-bold text-center mb-1">{member.name}</h3>
               <p className="text-sm text-[#6C63FF] text-center mb-3 font-semibold">{member.role}</p>
