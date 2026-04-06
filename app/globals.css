@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* 모바일 반응형 기초 */
+@media (max-width: 768px) {
+  /* 사이드바 숨기기 */
+  .sidebar { display: none !important; }
+
+  /* 그리드 → 단일 컬럼 */
+  .main-grid {
+    grid-template-columns: 1fr !important;
+    padding: 16px !important;
+  }
+
+  /* 헤더 네비 간소화 */
+  .nav-links { display: none !important; }
+  .mobile-menu { display: flex !important; }
+
+  /* 채팅 입력창 */
+  textarea, input {
+    font-size: 16px !important; /* iOS 줌 방지 */
+  }
+}
