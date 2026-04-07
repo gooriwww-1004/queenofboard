@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
+import { givePoints } from '@/lib/points';
 
 export default function WritePage() {
   const [title, setTitle] = useState('');
@@ -27,7 +28,9 @@ export default function WritePage() {
   e.preventDefault();
   if (!user) return;
   setLoading(true);
-
+  
+  // 글쓰기 포인트 지급
+  await givePoints(user.id, 5000, '게시글 작성');
   // 1. 게시글 저장
   const { data: post, error } = await supabase.from('posts').insert({
     title,

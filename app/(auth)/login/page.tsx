@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
+import { givePoints } from '@/lib/points';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -15,6 +16,9 @@ export default function LoginPage() {
     if (error) alert(error.message);
     else window.location.href = '/board';
     setLoading(false);
+    // 로그인 포인트 지급
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) await givePoints(user.id, 1000, '일일 로그인');
   };
 
   return (
