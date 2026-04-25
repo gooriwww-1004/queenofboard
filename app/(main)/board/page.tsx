@@ -1,7 +1,25 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
+import { useSearchParams, useRouter } from 'next/navigation';
+
+// 쿼리 파라미터 처리 컴포넌트 (Suspense 분리)
+function WriteRedirectHandler() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  useEffect(() => {
+    const write = searchParams.get('write');
+    const title = searchParams.get('title');
+    if (write === 'true' && title) {
+      // /board/write 페이지로 제목 들고 이동
+      router.push(`/board/write?title=${encodeURIComponent(title)}`);
+    }
+  }, [searchParams, router]);
+
+  return null;
+}
 
 export default function BoardPage() {
   const [posts, setPosts] = useState<any[]>([]);
@@ -37,7 +55,12 @@ export default function BoardPage() {
 
   return (
     <div style={{ maxWidth: 860, margin: '0 auto', padding: '32px 16px' }}>
-      
+
+      {/* 에테르 프레스에서 넘어올 때 자동 리다이렉트 */}
+      <Suspense fallback={null}>
+        <WriteRedirectHandler />
+      </Suspense>
+
       {/* 헤더 */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
         <div>
@@ -105,20 +128,15 @@ export default function BoardPage() {
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
                   <div style={{ flex: 1 }}>
-                    {/* 카테고리 배지 */}
                     <span style={{
                       fontSize: 11, padding: '3px 10px', borderRadius: 20, fontWeight: 700,
                       backgroundColor: '#EDE9FE', color: '#6C63FF', marginBottom: 8, display: 'inline-block'
                     }}>
                       {categoryEmoji[post.category]} {post.category}
                     </span>
-
-                    {/* 제목 */}
                     <h3 style={{ fontSize: 16, fontWeight: 700, color: '#1A1A2E', margin: '6px 0 8px', lineHeight: 1.4 }}>
                       {post.title}
                     </h3>
-
-                    {/* 작성자 + 시간 */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 13, color: '#9CA3AF' }}>
                       <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                         <span style={{ width: 20, height: 20, borderRadius: '50%', background: 'linear-gradient(135deg, #6C63FF, #00D2A0)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 10, fontWeight: 700 }}>
@@ -130,8 +148,6 @@ export default function BoardPage() {
                       <span>{timeAgo(post.created_at)}</span>
                     </div>
                   </div>
-
-                  {/* 우측 통계 */}
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4, fontSize: 12, color: '#9CA3AF', whiteSpace: 'nowrap' }}>
                     <span>💬 댓글</span>
                     <span>❤️ 좋아요</span>
